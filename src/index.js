@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql, createHttpLink } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const httpLink = createHttpLink({
   uri: 'https://api.github.com/graphql',
@@ -24,23 +25,12 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-client
-.query({
-    query: gql`
-    {
-      viewer {
-        login
-      }
-    }    
-    `
-  })
-  .then(result => console.log(result));
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ApolloProvider client={client}>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </ApolloProvider>,
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
