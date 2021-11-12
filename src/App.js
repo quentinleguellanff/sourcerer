@@ -86,7 +86,7 @@ const Overview = ({ user : { repositories } }) => (
         <h2>Overview</h2>
       </div>
       <div className='col'>
-        <p>{repositories.totalCount} repos <br/> Last updated:</p>
+        <p>{repositories.totalCount} repos <br/> Last updated: {LastUpdate()}</p>
       </div>
     </div>
     <div className='row'>
@@ -117,15 +117,12 @@ const Overview = ({ user : { repositories } }) => (
   </div>
 )
 
-function removeNull(array) {
-  return array.filter(x => x !== null)
-};
-
 function CommitSum() {
   const { loading, error, data } = useQuery(VIEWER);
   
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+
   var sum = 0
   data.viewer.repositories.nodes.forEach(repository => {
     if(repository.object != null){
@@ -135,14 +132,30 @@ function CommitSum() {
   return sum
 }
 
+function LastUpdate() {
+  const { loading, error, data } = useQuery(VIEWER);
+  
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+  
+    var allDate = []
+  
+    data.viewer.repositories.nodes.forEach(repository => {
+    allDate.push(Date.parse(repository.updatedAt))
+  });
+  var date = new Date(Math.max(...allDate))
+  var dateString = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() +':'+ date.getMinutes() + ':' + date.getSeconds()
+  return dateString
+}
+
 const Languages = ({user: { repositories } }) => (
   <div className='Languages-section'>
     <div className='row mt-5'>
       <div className='col'>
-        <h2>Overview</h2>
+        <h2>Languages</h2>
       </div>
       <div className='col'>
-        <p>{repositories.totalCount} repos <br/> Last updated:</p>
+        <p>{repositories.totalCount} repos <br/> Last updated: {LastUpdate()}</p>
       </div>
     </div>
     <div className='row'>
